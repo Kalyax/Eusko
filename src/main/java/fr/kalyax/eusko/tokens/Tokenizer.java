@@ -1,7 +1,4 @@
-package fr.kalyax.eusko;
-
-import fr.kalyax.eusko.tokens.Token;
-import fr.kalyax.eusko.tokens.TokenType;
+package fr.kalyax.eusko.tokens;
 
 public class Tokenizer {
 
@@ -20,13 +17,13 @@ public class Tokenizer {
     public Token getNextToken(){
         if(this.hasNext()){
             //Spaces
-            if(this.sentence.charAt(0) == ' ' && this.cursor == 0){
+            if(this.cursor == 0 && this.sentence.charAt(0) == ' '){
                 int spaceCount = 1;
                 while(this.sentence.charAt(spaceCount) == ' '){
                     spaceCount++;
                     this.cursor++;
                 }
-                return new Token(TokenType.SPACE, String.valueOf(spaceCount));
+                return new Token<String>(TokenType.SPACE, String.valueOf(spaceCount));
             }
 
 
@@ -35,34 +32,36 @@ public class Tokenizer {
             //Integers
             if(Character.toString(this.sentence.charAt(this.cursor)).matches("[0-9]+")){
                 StringBuilder token = new StringBuilder();
-                while(!Character.toString(this.sentence.charAt(this.cursor)).matches("[^0-9]+")){
+                while(this.hasNext() && !Character.toString(this.sentence.charAt(this.cursor)).matches("[^0-9]+")){
                     token.append(this.sentence.charAt(this.cursor++));
                 }
-                return new Token(TokenType.INTEGER, token.toString());
+                return new Token<Integer>(TokenType.INTEGER, Integer.parseInt(token.toString()));
             }
             //String
             else if(this.sentence.charAt(this.cursor) == '"'){
                 StringBuilder token = new StringBuilder();
                 this.cursor++;
-                while(this.sentence.charAt(this.cursor) != '"'){
+                while(this.hasNext() && this.sentence.charAt(this.cursor) != '"'){
                     token.append(this.sentence.charAt(this.cursor++));
                 }
                 this.cursor++;
-                return new Token(TokenType.STRING, token.toString());
+                return new Token<String>(TokenType.STRING, token.toString());
             }
             //Operators
-            else if(Character.toString(this.sentence.charAt(this.cursor)).matches("[+\\-*/<>=:]")){
-                StringBuilder token = new StringBuilder();
-                token.append(this.sentence.charAt(this.cursor++));
-                return new Token(TokenType.OPERATOR, token.toString());
+            else if(Character.toString(this.sentence.charAt(this.cursor)).matches("[+\\-*/<>=]")){
+                return new Token<String>(TokenType.OPERATOR, String.valueOf(this.sentence.charAt(this.cursor++)));
+            }
+            //Identifiers
+            else if(Character.toString(this.sentence.charAt(this.cursor)).matches("[:(){}]")){
+                return new Token<String>(TokenType.IDENTIFIER, String.valueOf(this.sentence.charAt(this.cursor++)));
             }
             //Keywords
             else if(this.sentence.charAt(this.cursor) != ' '){
                 StringBuilder token = new StringBuilder();
-                while(this.hasNext() && this.sentence.charAt(this.cursor) != ' ' && !(Character.toString(this.sentence.charAt(this.cursor)).matches("[+\\-*/<>=:]"))){
+                while(this.hasNext() && this.sentence.charAt(this.cursor) != ' ' && !(Character.toString(this.sentence.charAt(this.cursor)).matches("[+\\-*/<>=:(){}]"))){
                     token.append(this.sentence.charAt(this.cursor++));
                 }
-                return new Token(TokenType.KEYWORD, token.toString());
+                return new Token<String>(TokenType.KEYWORD, token.toString());
             }
         }
         this.cursor++;

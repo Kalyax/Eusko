@@ -1,2 +1,1 @@
-set 8 = "a" bla ble:
-    if caca = "a" then
+console "test"
