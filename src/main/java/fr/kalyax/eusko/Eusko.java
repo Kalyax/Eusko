@@ -1,9 +1,11 @@
 package fr.kalyax.eusko;
 
+import fr.kalyax.eusko.parser.GenericSentence;
 import fr.kalyax.eusko.parser.Parser;
 import fr.kalyax.eusko.tokens.Token;
 import fr.kalyax.eusko.tokens.TokenType;
 import fr.kalyax.eusko.tokens.Tokenizer;
+import fr.kalyax.eusko.types.Object;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -26,7 +28,12 @@ public class Eusko {
         }
         reader.close();
         Parser parser = new Parser(tokens);
-        System.out.println(parser.parse());
+        for(GenericSentence s : parser.parse()){
+            System.out.println(s.getSentence());
+            for(Object o : s.getArgs()){
+                System.out.println("- "+o.getType() + " : " + o.getValue());
+            }
+        }
     }
 
 }

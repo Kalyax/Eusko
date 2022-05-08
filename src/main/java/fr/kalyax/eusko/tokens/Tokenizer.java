@@ -53,7 +53,7 @@ public class Tokenizer {
             }
             //Identifiers
             else if(Character.toString(this.sentence.charAt(this.cursor)).matches("[:(){}]")){
-                return new Token<String>(TokenType.IDENTIFIER, String.valueOf(this.sentence.charAt(this.cursor++)));
+                return new Token<String>(TokenType.BRACKETS, String.valueOf(this.sentence.charAt(this.cursor++)));
             }
             //Keywords
             else if(this.sentence.charAt(this.cursor) != ' '){

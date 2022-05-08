@@ -1,13 +1,15 @@
 package fr.kalyax.eusko.parser;
 
-import fr.kalyax.eusko.types.Type;
+import fr.kalyax.eusko.types.Object;
+
+import java.util.ArrayList;
 
 public class GenericSentence {
 
     private String sentence;
-    private Type[] args;
+    private ArrayList<Object> args;
 
-    public GenericSentence(String sentence, Type[] args) {
+    public GenericSentence(String sentence, ArrayList<Object> args) {
         this.sentence = sentence;
         this.args = args;
     }
@@ -16,7 +18,7 @@ public class GenericSentence {
         return sentence;
     }
 
-    public Type[] getArgs() {
+    public ArrayList<Object> getArgs() {
         return args;
     }
 
