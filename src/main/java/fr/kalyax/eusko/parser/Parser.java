@@ -79,13 +79,18 @@ public class Parser {
                         innerTokens.add(tokens.get(j));
                         j++;
                     }
-                    simplifiedTokens.addAll(simplifyOperations(innerTokens));
+                    if (j > i) {
+                        tokens.subList(i, j+1).clear();
+                    }
+                    tokens.addAll(i, simplifyOperations(innerTokens));
+                    i = 0;
                 }
             }
             else if(tokens.get(i).getType() == TokenType.OPERATOR){
                 if(tokens.get(i-1).getType() == TokenType.INTEGER && tokens.get(i+1).getType() == TokenType.INTEGER){
                     int j = (int) tokens.get(i-1).getValue();
                     int k = (int) tokens.get(i+1).getValue();
+                    //TODO: apply on / and %
                     if(k == 0){
                         //throw new Exception("Division by 0");
                         return null;
@@ -95,10 +100,19 @@ public class Parser {
                         case "-" -> j - k;
                         case "*" -> j * k;
                         case "/" -> j / k;
+                        case "%" -> j % k;
                         default -> 0;
                     };
-                    simplifiedTokens.add(new Token(TokenType.INTEGER, String.valueOf(result)));
+                    simplifiedTokens.add(new Token(TokenType.INTEGER, result));
                     i = i+2;
+                }
+                else if(tokens.get(i+1).getType() == TokenType.BRACKETS){
+                    if(tokens.get(i+1).getValue().equals("(")){
+                        continue;
+                    }
+                    else if(tokens.get(i+1).getValue().equals("{")){
+                        //TODO: implement variables evaluation
+                    }
                 }
                 else if(tokens.get(i-1).getType() == TokenType.STRING && tokens.get(i+1).getType() == TokenType.STRING){
                     int j = i-1;
@@ -115,6 +129,7 @@ public class Parser {
                     i = i+2;
                 }
             }
+            else if(tokens.get(i).getType() == TokenType.INTEGER) i = i-2;
         }
         return simplifiedTokens;
     }

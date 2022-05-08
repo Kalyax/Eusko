@@ -1,2 +1,1 @@
-console "test" + " abc"
-console 2*(4+5)
+console 4*(2*(2+2))
